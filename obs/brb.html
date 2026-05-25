@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Renato Barria · BRB</title>
+  <meta name="description" content="OBS scene · 1920×1080 be right back" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="lib.css" />
+  <style>
+    html, body { background: #06070a; }
+    body { width: 1920px; height: 1080px; overflow: hidden; }
+    .scene { position: relative; width: 1920px; height: 1080px;
+      background: radial-gradient(ellipse at 50% 50%, #0e1614 0%, #06070a 80%); }
+    .grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(74,222,128,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(74,222,128,0.03) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(ellipse at center, #000 40%, transparent 80%);
+    }
+    /* Slower scan-line — calmer pacing for BRB */
+    .scanline {
+      position: absolute; left: 0; right: 0; top: 0; height: 80px;
+      background: linear-gradient(180deg, rgba(74,222,128,0.06) 0%, transparent 100%);
+      animation: rb-scan 12s linear infinite;
+      pointer-events: none;
+    }
+
+    .hero {
+      position: absolute; left: 50%; top: 42%;
+      transform: translate(-50%, -50%); text-align: center;
+    }
+    .hero .orbital {
+      position: absolute; left: 50%; top: 50%;
+      transform: translate(-50%, -50%); pointer-events: none;
+    }
+    .hero .rune {
+      animation: rb-rune-drift 5s ease-in-out infinite;
+      filter: drop-shadow(0 0 16px var(--term-faint));
+      position: relative; z-index: 5;
+    }
+    .hero h1 {
+      margin: 28px 0 6px;
+      font-family: "Outfit", sans-serif; font-size: 84px; font-weight: 300;
+      color: var(--ink); letter-spacing: -0.04em; line-height: 1;
+    }
+    .hero h1 .accent { color: var(--term); font-weight: 500; }
+    .hero .eyebrow {
+      font-family: "JetBrains Mono", monospace; font-size: 13px;
+      letter-spacing: 0.52em; color: var(--term);
+      text-transform: uppercase; font-weight: 600;
+    }
+    .hero .sub {
+      margin-top: 8px;
+      font-family: "Outfit", sans-serif; font-size: 19px; font-weight: 300;
+      color: var(--ink-dim); letter-spacing: 0.04em;
+      font-style: italic;
+    }
+
+    /* Pause symbol on rune (two bars overlay) */
+    .pause {
+      position: absolute; left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      display: flex; gap: 18px;
+      z-index: 4; opacity: 0.18;
+    }
+    .pause i { display: block; width: 26px; height: 100px; background: var(--term);
+      border-radius: 2px; }
+
+    /* Top status */
+    .top {
+      position: absolute; top: 40px; left: 80px; right: 80px;
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: "JetBrains Mono", monospace;
+    }
+    .top .session {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 12px; letter-spacing: 0.28em; color: var(--term-dim);
+      text-transform: uppercase; font-weight: 600;
+    }
+    .top .session .dot {
+      width: 8px; height: 8px; border-radius: 50%; background: var(--gold);
+      box-shadow: 0 0 8px var(--gold);
+      animation: rb-blink 2.4s steps(1) infinite;
+    }
+    .top .session .v { color: var(--gold); }
+    .top .time {
+      font-size: 11px; letter-spacing: 0.32em; color: var(--term-dim);
+      text-transform: uppercase; font-weight: 600;
+    }
+
+    /* Music player card — bottom-left */
+    .music {
+      position: absolute; left: 80px; bottom: 80px;
+      width: 460px; padding: 18px 22px;
+      background: rgba(6,8,10,0.85);
+      border: 1px solid var(--term-faint);
+      box-shadow: var(--shadow);
+      font-family: "JetBrains Mono", monospace;
+    }
+    .music .head {
+      font-size: 10px; letter-spacing: 0.28em; color: var(--term);
+      margin-bottom: 12px; padding-bottom: 8px;
+      border-bottom: 1px solid var(--term-faint); font-weight: 600;
+      display: flex; justify-content: space-between;
+    }
+    .music .head .eq {
+      display: inline-flex; gap: 3px; align-items: end; height: 12px;
+    }
+    .music .head .eq i {
+      width: 3px; background: var(--term);
+      animation: rb-eq 0.8s ease-in-out infinite alternate;
+    }
+    .music .head .eq i:nth-child(1) { animation-delay: 0s; }
+    .music .head .eq i:nth-child(2) { animation-delay: 0.15s; }
+    .music .head .eq i:nth-child(3) { animation-delay: 0.3s; }
+    .music .head .eq i:nth-child(4) { animation-delay: 0.45s; }
+    @keyframes rb-eq {
+      0%   { height: 3px; }
+      100% { height: 12px; }
+    }
+    .music .track {
+      font-family: "Outfit", sans-serif; font-size: 20px; font-weight: 500;
+      color: var(--ink); margin-bottom: 4px;
+    }
+    .music .artist {
+      font-family: "Outfit", sans-serif; font-size: 14px; color: var(--term-dim);
+      margin-bottom: 14px; letter-spacing: 0.04em;
+    }
+    .music .progress {
+      height: 3px; background: rgba(74,222,128,0.10); position: relative;
+      overflow: hidden;
+    }
+    .music .progress .fill {
+      position: absolute; left: 0; top: 0; bottom: 0; width: 40%;
+      background: linear-gradient(90deg, var(--term-dim), var(--term));
+      box-shadow: 0 0 6px var(--term-faint);
+    }
+    .music .times {
+      display: flex; justify-content: space-between;
+      margin-top: 6px; font-size: 10px; color: var(--term-dim);
+      letter-spacing: 0.18em; font-variant-numeric: tabular-nums;
+    }
+
+    /* Away timer card — bottom-right */
+    .away {
+      position: absolute; right: 80px; bottom: 80px;
+      width: 380px; padding: 22px 24px;
+      background: rgba(6,8,10,0.85);
+      border: 1px solid var(--term-faint);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+    .away .l {
+      font-family: "JetBrains Mono", monospace; font-size: 10px;
+      letter-spacing: 0.32em; color: var(--term-dim); font-weight: 600;
+      text-transform: uppercase; margin-bottom: 12px;
+    }
+    .away .timer {
+      font-family: "JetBrains Mono", monospace; font-size: 52px;
+      font-weight: 500; color: var(--ink); letter-spacing: 0.02em;
+      font-variant-numeric: tabular-nums; line-height: 1;
+      text-shadow: 0 0 16px var(--term-faint);
+    }
+    .away .timer .ms { color: var(--term); }
+    .away .note {
+      margin-top: 12px;
+      font-family: "JetBrains Mono", monospace; font-size: 11px;
+      color: var(--term); letter-spacing: 0.14em;
+    }
+
+    /* Floating runes */
+    .runes-bg {
+      position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+    }
+    .runes-bg span {
+      position: absolute;
+      font-family: "JetBrains Mono", monospace; font-size: 24px;
+      color: var(--term); opacity: 0.15;
+      text-shadow: 0 0 6px var(--term);
+      animation: rb-rune-drift 5s ease-in-out infinite;
+    }
+
+    /* Recent chat sidebar (left, smaller, paused state) */
+    .chat-side {
+      position: absolute; right: 80px; top: 200px;
+      width: 380px; padding: 16px 18px;
+      background: rgba(6,8,10,0.6);
+      border: 1px solid var(--term-faint);
+      font-family: "JetBrains Mono", monospace;
+    }
+    .chat-side .l {
+      font-size: 9px; letter-spacing: 0.28em; color: var(--term-dim);
+      text-transform: uppercase; font-weight: 600; margin-bottom: 10px;
+      display: flex; justify-content: space-between;
+    }
+    .chat-side .l .c { color: var(--term); }
+    .chat-side .m {
+      font-size: 11px; color: var(--ink-dim);
+      padding: 4px 0;
+    }
+    .chat-side .m .u { font-weight: 600; }
+
+    /* Data lines */
+    .data-line { position: absolute; left: 0; right: 0; height: 4px; }
+    .data-line svg { width: 100%; height: 4px; display: block; }
+    .data-line.top { top: 0; }
+    .data-line.bot { bottom: 0; }
+  </style>
+</head>
+<body>
+  <div class="scene">
+    <div class="grid"></div>
+    <div class="scanline"></div>
+
+    <!-- Floating runes background -->
+    <div class="runes-bg">
+      <span style="left:8%;top:18%;animation-delay:0s">ᛏ</span>
+      <span style="left:18%;top:62%;animation-delay:1s">ᚷ</span>
+      <span style="left:88%;top:24%;animation-delay:2s">ᛒ</span>
+      <span style="left:92%;top:74%;animation-delay:0.5s">ᛏᚷ</span>
+      <span style="left:42%;top:88%;animation-delay:1.5s">ᛏ</span>
+    </div>
+
+    <!-- Top status -->
+    <div class="top">
+      <div class="session">
+        <span class="dot"></span>
+        <span>SESSION ·</span>
+        <span class="v">PAUSED · AFK</span>
+      </div>
+      <div class="time">// runner is away · stream live</div>
+    </div>
+
+    <!-- Data lines -->
+    <div class="data-line top"><svg><line x1="0" y1="2" x2="100%" y2="2" stroke="#4ade80" stroke-width="1" opacity="0.4" stroke-dasharray="4 8" style="animation: rb-data-flow 6s linear infinite"/></svg></div>
+    <div class="data-line bot"><svg><line x1="0" y1="2" x2="100%" y2="2" stroke="#4ade80" stroke-width="1" opacity="0.4" stroke-dasharray="4 8" style="animation: rb-data-flow 6s linear infinite reverse"/></svg></div>
+
+    <!-- Center hero -->
+    <div class="hero">
+      <div class="orbital" style="animation: rb-orbit 60s linear infinite;">
+        <svg width="500" height="500" viewBox="0 0 500 500">
+          <circle cx="250" cy="250" r="220" fill="none" stroke="rgba(74,222,128,0.10)" stroke-width="1" stroke-dasharray="2 14"/>
+        </svg>
+      </div>
+      <div class="orbital" style="animation: rb-orbit-r 40s linear infinite;">
+        <svg width="360" height="360" viewBox="0 0 360 360">
+          <circle cx="180" cy="180" r="160" fill="none" stroke="rgba(74,222,128,0.16)" stroke-width="1" stroke-dasharray="4 12"/>
+          <circle cx="20" cy="180" r="3" fill="#4ade80"/>
+          <circle cx="340" cy="180" r="3" fill="#4ade80"/>
+        </svg>
+      </div>
+
+      <div class="rune" style="position: relative;">
+        <svg width="160" height="200" viewBox="0 0 160 200">
+          <g fill="none" stroke="#e6f7ec" stroke-width="4" stroke-linecap="round" opacity="0.5">
+            <line x1="80" y1="14" x2="80" y2="186"/>
+            <line x1="80" y1="14" x2="32" y2="62"/>
+            <line x1="80" y1="14" x2="128" y2="62"/>
+            <line x1="32" y1="80" x2="128" y2="130"/>
+            <line x1="32" y1="130" x2="128" y2="80"/>
+          </g>
+          <circle cx="80" cy="14" r="6" fill="#e6f7ec" opacity="0.5"/>
+          <circle cx="32" cy="62" r="6" fill="#e6f7ec" opacity="0.5"/>
+          <circle cx="128" cy="62" r="6" fill="#e6f7ec" opacity="0.5"/>
+          <circle cx="32" cy="80" r="6" fill="#e6f7ec" opacity="0.5"/>
+          <circle cx="128" cy="80" r="6" fill="#e6f7ec" opacity="0.5"/>
+          <circle cx="32" cy="130" r="6" fill="#e6f7ec" opacity="0.5"/>
+          <circle cx="128" cy="130" r="6" fill="#e6f7ec" opacity="0.5"/>
+          <circle cx="80" cy="186" r="8" fill="#4ade80" style="filter: drop-shadow(0 0 12px #4ade80)"/>
+        </svg>
+        <!-- Pause bars overlay -->
+        <div class="pause">
+          <i></i>
+          <i></i>
+        </div>
+      </div>
+
+      <h1>YA <span class="accent">REGRESO</span></h1>
+      <div class="eyebrow">◆ STREAM ON STANDBY ◆</div>
+      <div class="sub">tomando café · vuelvo en un momento</div>
+    </div>
+
+    <!-- Music player -->
+    <div class="music">
+      <div class="head">
+        <span>▍ now.playing</span>
+        <span class="eq"><i></i><i></i><i></i><i></i></span>
+      </div>
+      <div class="track">Heilung — Krigsgaldr</div>
+      <div class="artist">Lifa · 2017 · 04:21 / 10:48</div>
+      <div class="progress"><div class="fill"></div></div>
+      <div class="times"><span>04:21</span><span>10:48</span></div>
+    </div>
+
+    <!-- Chat (quieter, smaller) -->
+    <div class="chat-side">
+      <div class="l"><span>▍ chat.queue</span><span class="c">142 conn</span></div>
+      <div class="m"><span class="u" style="color:#4ade80">thor_dev</span><span style="color:var(--term-dim)"> › </span>F en el chat</div>
+      <div class="m"><span class="u" style="color:#a78bfa">odin_codes</span><span style="color:var(--term-dim)"> › </span>tranquilo, esperamos</div>
+      <div class="m"><span class="u" style="color:#fbbf24">midgard_42</span><span style="color:var(--term-dim)"> › </span>vuelve pronto!</div>
+      <div class="m"><span class="u" style="color:#7fb3d5">valhalla_js</span><span style="color:var(--term-dim)"> › </span>buen track</div>
+    </div>
+
+    <!-- Away timer -->
+    <div class="away">
+      <div class="l">▍ back.in</div>
+      <div class="timer">05:00<span class="ms">.00</span></div>
+      <div class="note">aprox · check.queue() pending</div>
+    </div>
+  </div>
+</body>
+</html>

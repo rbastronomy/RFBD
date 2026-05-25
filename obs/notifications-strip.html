@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Renato Barria · Notifications Strip</title>
+  <meta name="description" content="OBS browser source · 1540×214 horizontal strip with recent activity + mini chat" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="lib.css" />
+  <style>
+    body { width: 1540px; height: 214px; }
+    .strip {
+      width: 1540px; height: 214px;
+      display: grid; grid-template-columns: 1fr 460px 380px;
+      gap: 16px; padding: 12px;
+    }
+    .card {
+      background: rgba(6,8,10,0.88);
+      border: 1px solid var(--term-faint);
+      box-shadow: var(--shadow);
+      position: relative; overflow: hidden;
+      padding: 14px 18px;
+    }
+    .card::after {
+      content: "";
+      position: absolute; inset: 0; pointer-events: none;
+      background: repeating-linear-gradient(0deg,
+        rgba(74,222,128,0.04) 0, rgba(74,222,128,0.04) 1px,
+        transparent 1px, transparent 3px);
+    }
+    .label {
+      font-size: 9px; letter-spacing: 0.28em; color: var(--term-dim);
+      text-transform: uppercase; font-weight: 600; margin-bottom: 10px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .label .c { color: var(--term); }
+    /* Recent activity ticker (scrolling) */
+    .ticker {
+      overflow: hidden; height: 140px;
+      mask-image: linear-gradient(180deg, transparent 0, #000 12%, #000 88%, transparent 100%);
+      -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 12%, #000 88%, transparent 100%);
+    }
+    .ticker .track {
+      display: flex; flex-direction: column;
+      animation: rb-ticker-y 16s linear infinite;
+    }
+    @keyframes rb-ticker-y {
+      from { transform: translateY(0); }
+      to   { transform: translateY(-50%); }
+    }
+    .ticker .event {
+      display: flex; align-items: center; gap: 12px;
+      padding: 6px 0;
+      font-family: "JetBrains Mono", monospace; font-size: 12px;
+      color: var(--ink); letter-spacing: 0.02em;
+    }
+    .ticker .event .ts { color: var(--term-dim); font-size: 10px; min-width: 50px; }
+    .ticker .event .ar { color: var(--term); }
+    .ticker .event .tag {
+      font-size: 9px; padding: 1px 6px;
+      border: 1px solid var(--term-faint); color: var(--term-dim);
+      letter-spacing: 0.1em;
+    }
+    .ticker .event .tag.s { color: var(--gold); border-color: rgba(251,191,36,0.4); }
+    .ticker .event .tag.r { color: #a78bfa; border-color: rgba(167,139,250,0.4); }
+    .ticker .event .u { font-weight: 600; }
+    /* Chat */
+    .chat .list {
+      display: flex; flex-direction: column; gap: 5px; height: 140px;
+      overflow: hidden; justify-content: flex-end;
+    }
+    .chat .m {
+      font-family: "JetBrains Mono", monospace; font-size: 12px;
+      line-height: 1.4; color: var(--ink-dim);
+      animation: rb-fade-up 0.5s ease-out;
+    }
+    .chat .m .u { font-weight: 600; }
+    .chat .prompt { color: var(--term-dim); font-family: "JetBrains Mono", monospace; font-size: 12px; }
+    /* Branding card */
+    .brand {
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .brand .row {
+      display: flex; align-items: center; gap: 14px;
+    }
+    .brand .name {
+      font-family: "Outfit", sans-serif; font-size: 18px; font-weight: 600;
+      color: var(--ink); letter-spacing: 0.06em;
+    }
+    .brand .sub {
+      margin-top: 3px; font-size: 9px; color: var(--term-dim); letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+    .brand .socials {
+      display: flex; flex-direction: column; gap: 6px;
+      font-family: "JetBrains Mono", monospace; font-size: 11px;
+      color: var(--ink-dim); letter-spacing: 0.04em;
+    }
+    .brand .socials .gn { color: var(--term); }
+    /* Data flow line */
+    .dataline { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; }
+    .dataline svg { width: 100%; height: 2px; }
+  </style>
+</head>
+<body>
+  <div class="strip">
+    <!-- Recent activity ticker -->
+    <div class="card">
+      <div class="label">
+        <span>▍ activity.log</span>
+        <span class="c">+18 / 24h</span>
+      </div>
+      <div class="ticker">
+        <div class="track">
+          <div class="event"><span class="ts">12:47</span><span class="ar">▸</span><span class="u" style="color:#fbbf24">midgard_42</span><span style="color:var(--term-dim)">se suscribió por 3 meses</span><span class="tag s">SUB</span></div>
+          <div class="event"><span class="ts">12:31</span><span class="ar">▸</span><span class="u" style="color:#4ade80">thor_dev</span><span style="color:var(--term-dim)">hizo raid con 24 viewers</span><span class="tag r">RAID</span></div>
+          <div class="event"><span class="ts">12:18</span><span class="ar">▸</span><span class="u" style="color:#7fb3d5">odin_codes</span><span style="color:var(--term-dim)">dejó 500 bits</span><span class="tag">BITS</span></div>
+          <div class="event"><span class="ts">11:54</span><span class="ar">▸</span><span class="u" style="color:#a78bfa">valhalla_js</span><span style="color:var(--term-dim)">se suscribió</span><span class="tag s">SUB</span></div>
+          <div class="event"><span class="ts">11:42</span><span class="ar">▸</span><span class="u" style="color:#4ade80">fenrir_42</span><span style="color:var(--term-dim)">sigue el canal</span><span class="tag">FOLLOW</span></div>
+          <div class="event"><span class="ts">11:30</span><span class="ar">▸</span><span class="u" style="color:#fbbf24">loki_bytes</span><span style="color:var(--term-dim)">renovó su sub por 6 meses</span><span class="tag s">SUB</span></div>
+          <!-- duplicate for seamless loop -->
+          <div class="event"><span class="ts">12:47</span><span class="ar">▸</span><span class="u" style="color:#fbbf24">midgard_42</span><span style="color:var(--term-dim)">se suscribió por 3 meses</span><span class="tag s">SUB</span></div>
+          <div class="event"><span class="ts">12:31</span><span class="ar">▸</span><span class="u" style="color:#4ade80">thor_dev</span><span style="color:var(--term-dim)">hizo raid con 24 viewers</span><span class="tag r">RAID</span></div>
+          <div class="event"><span class="ts">12:18</span><span class="ar">▸</span><span class="u" style="color:#7fb3d5">odin_codes</span><span style="color:var(--term-dim)">dejó 500 bits</span><span class="tag">BITS</span></div>
+          <div class="event"><span class="ts">11:54</span><span class="ar">▸</span><span class="u" style="color:#a78bfa">valhalla_js</span><span style="color:var(--term-dim)">se suscribió</span><span class="tag s">SUB</span></div>
+          <div class="event"><span class="ts">11:42</span><span class="ar">▸</span><span class="u" style="color:#4ade80">fenrir_42</span><span style="color:var(--term-dim)">sigue el canal</span><span class="tag">FOLLOW</span></div>
+          <div class="event"><span class="ts">11:30</span><span class="ar">▸</span><span class="u" style="color:#fbbf24">loki_bytes</span><span style="color:var(--term-dim)">renovó su sub por 6 meses</span><span class="tag s">SUB</span></div>
+        </div>
+      </div>
+      <div class="dataline"><svg><line x1="0" y1="1" x2="100%" y2="1" stroke="#4ade80" stroke-width="1" opacity="0.5" stroke-dasharray="4 8" style="animation: rb-data-flow 5s linear infinite"/></svg></div>
+    </div>
+
+    <!-- Chat -->
+    <div class="card chat">
+      <div class="label">
+        <span>▍ chat.stream</span>
+        <span class="c">142 conn</span>
+      </div>
+      <div class="list">
+        <div class="m"><span style="color:var(--term-dim)">[58:14] </span><span class="u" style="color:#4ade80">thor_dev</span><span style="color:var(--term-dim)"> › </span>ese gold split GG</div>
+        <div class="m"><span style="color:var(--term-dim)">[58:32] </span><span class="u" style="color:#7fb3d5">odin_codes</span><span style="color:var(--term-dim)"> › </span>baldur skip?</div>
+        <div class="m"><span style="color:var(--term-dim)">[58:48] </span><span class="u" style="color:#fbbf24">valhalla_js</span><span style="color:var(--term-dim)"> › </span>PB time</div>
+        <div class="m"><span style="color:var(--term-dim)">[59:01] </span><span class="u" style="color:#4ade80">midgard</span><span style="color:var(--term-dim)"> › </span>el overlay queda 🔥</div>
+        <div class="prompt"><span style="color:var(--term)">{'>'}</span> <span class="rb-cursor">▊</span></div>
+      </div>
+    </div>
+
+    <!-- Brand & socials -->
+    <div class="card brand">
+      <div class="row">
+        <svg width="40" height="50" viewBox="0 0 40 50">
+          <g fill="none" stroke="#e6f7ec" stroke-width="2" stroke-linecap="round">
+            <line x1="20" y1="5" x2="20" y2="45"/>
+            <line x1="20" y1="5" x2="8" y2="17"/>
+            <line x1="20" y1="5" x2="32" y2="17"/>
+            <line x1="8" y1="22" x2="32" y2="34"/>
+            <line x1="8" y1="34" x2="32" y2="22"/>
+          </g>
+          <circle cx="20" cy="5" r="2.4" fill="#e6f7ec"/>
+          <circle cx="8" cy="17" r="2.4" fill="#e6f7ec"/>
+          <circle cx="32" cy="17" r="2.4" fill="#e6f7ec"/>
+          <circle cx="8" cy="22" r="2.4" fill="#e6f7ec"/>
+          <circle cx="32" cy="22" r="2.4" fill="#e6f7ec"/>
+          <circle cx="8" cy="34" r="2.4" fill="#e6f7ec"/>
+          <circle cx="32" cy="34" r="2.4" fill="#e6f7ec"/>
+          <circle cx="20" cy="45" r="3" fill="#4ade80"/>
+        </svg>
+        <div>
+          <div class="name">RBASTRONOMY</div>
+          <div class="sub">ᛏᚷ · stream node</div>
+        </div>
+      </div>
+      <div class="socials">
+        <span><span class="gn">▸ twitch</span> · twitch.tv/rbastronomy</span>
+        <span><span class="gn">▸ github</span> · github.com/rbastronomy</span>
+        <span><span class="gn">▸ mail</span> · rfbdsistemas@hotmail.com</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

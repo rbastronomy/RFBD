@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Renato Barria · Follower Counter</title>
+  <meta name="description" content="OBS browser source · 380×400 transparent · animated decorations" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="lib.css" />
+  <style>
+    body { width: 380px; height: 400px; }
+    .panel {
+      width: 380px; height: 400px;
+      display: flex; flex-direction: column;
+    }
+    .head {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--term-faint);
+      background: rgba(74,222,128,0.04);
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 10px; letter-spacing: 0.24em; color: var(--term-dim);
+      text-transform: uppercase; font-weight: 600;
+    }
+    .hero {
+      position: relative; padding: 22px 16px 12px; text-align: center;
+      overflow: hidden;
+    }
+    /* Orbital rings */
+    .orbit {
+      position: absolute; left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .orbit svg { display: block; }
+    .num {
+      position: relative; z-index: 2;
+      font-family: "Outfit", sans-serif; font-size: 64px; font-weight: 300;
+      color: var(--ink); letter-spacing: -0.02em; line-height: 1;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 0 24px var(--term-faint);
+    }
+    .num .delta {
+      display: inline-block; vertical-align: middle; margin-left: 10px;
+      padding: 4px 10px;
+      background: rgba(74,222,128,0.10); border: 1px solid var(--term);
+      color: var(--term);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.08em;
+    }
+    .label {
+      position: relative; z-index: 2;
+      margin-top: 2px; font-size: 9px; letter-spacing: 0.42em;
+      color: var(--term-dim); text-transform: uppercase; font-weight: 600;
+    }
+    .goal {
+      position: relative; z-index: 2;
+      padding: 10px 16px 6px;
+      font-size: 10px; color: var(--ink-dim); letter-spacing: 0.14em;
+    }
+    .goal .row {
+      display: flex; justify-content: space-between; margin-bottom: 6px;
+      font-family: "JetBrains Mono", monospace;
+    }
+    .goal .row .pct { color: var(--term); }
+    .goal-bar {
+      height: 6px; background: rgba(74,222,128,0.08);
+      border: 1px solid var(--term-faint);
+      position: relative; overflow: hidden;
+    }
+    .goal-bar .fill {
+      position: absolute; left: 0; top: 0; bottom: 0;
+      background: linear-gradient(90deg, var(--term-dim), var(--term));
+      box-shadow: 0 0 8px var(--term-faint);
+      width: 71%;
+      animation: rb-bar-fill 1.4s ease-out;
+      --fill: 71%;
+    }
+    .recent {
+      padding: 14px 16px 10px;
+      border-top: 1px solid var(--term-faint);
+      flex: 1; overflow: hidden;
+    }
+    .recent .l {
+      font-size: 9px; letter-spacing: 0.26em; color: var(--term-dim);
+      text-transform: uppercase; font-weight: 600; margin-bottom: 8px;
+      display: flex; justify-content: space-between;
+    }
+    .recent .l .cnt { color: var(--term); }
+    .recent .item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 5px 0; font-family: "JetBrains Mono", monospace;
+      font-size: 12px; opacity: 0;
+      animation: rb-fade-up 0.5s ease-out forwards;
+    }
+    .recent .item:nth-child(2) { animation-delay: 0.1s; }
+    .recent .item:nth-child(3) { animation-delay: 0.2s; }
+    .recent .item:nth-child(4) { animation-delay: 0.3s; }
+    .recent .item:nth-child(5) { animation-delay: 0.4s; }
+    .recent .item .ts { color: var(--term-dim); font-size: 10px; min-width: 38px; }
+    .recent .item .ar { color: var(--term); }
+    .recent .item .nm { color: var(--ink); font-weight: 600; flex: 1; }
+    .recent .item .tag {
+      font-size: 9px; padding: 1px 6px;
+      border: 1px solid var(--term-faint); color: var(--term-dim);
+      letter-spacing: 0.1em;
+    }
+    .recent .item .tag.s { color: var(--gold); border-color: rgba(251,191,36,0.4); }
+
+    /* Drifting particles */
+    .particles {
+      position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+    }
+    .particles span {
+      position: absolute; bottom: 0;
+      font-family: "JetBrains Mono", monospace; font-size: 11px;
+      color: var(--term); opacity: 0;
+      animation: rb-particle 6s linear infinite;
+      text-shadow: 0 0 4px var(--term);
+    }
+    .particles span:nth-child(1) { left: 10%; animation-delay: 0s; }
+    .particles span:nth-child(2) { left: 25%; animation-delay: 1.4s; }
+    .particles span:nth-child(3) { left: 40%; animation-delay: 0.7s; }
+    .particles span:nth-child(4) { left: 58%; animation-delay: 2.1s; }
+    .particles span:nth-child(5) { left: 72%; animation-delay: 3.2s; }
+    .particles span:nth-child(6) { left: 88%; animation-delay: 4s; }
+
+    /* Cursor & data flow line */
+    .dataline { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; pointer-events: none; }
+  </style>
+</head>
+<body>
+  <div class="rb-panel panel">
+    <div class="head">
+      <span>▍ followers.live</span>
+      <span><span class="rb-cursor" style="color:var(--term)">●</span> tracking</span>
+    </div>
+
+    <div class="hero">
+      <!-- Orbital decorative rings -->
+      <div class="orbit" style="animation: rb-orbit 30s linear infinite;">
+        <svg width="280" height="280" viewBox="0 0 280 280">
+          <circle cx="140" cy="140" r="120" fill="none" stroke="rgba(74,222,128,0.10)" stroke-width="1" stroke-dasharray="2 8"/>
+        </svg>
+      </div>
+      <div class="orbit" style="animation: rb-orbit-r 22s linear infinite;">
+        <svg width="200" height="200" viewBox="0 0 200 200">
+          <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(74,222,128,0.16)" stroke-width="1" stroke-dasharray="4 6"/>
+          <circle cx="190" cy="100" r="3" fill="#4ade80"/>
+        </svg>
+      </div>
+      <div class="orbit" style="animation: rb-orbit 18s linear infinite; opacity: 0.6;">
+        <svg width="150" height="150" viewBox="0 0 150 150">
+          <circle cx="75" cy="75" r="68" fill="none" stroke="rgba(74,222,128,0.12)" stroke-width="0.7"/>
+          <circle cx="143" cy="75" r="2" fill="#4ade80"/>
+          <circle cx="7" cy="75" r="2" fill="#4ade80"/>
+        </svg>
+      </div>
+
+      <div class="num"><span class="rb-counter-num">1,428</span><span class="delta">+18</span></div>
+      <div class="label">FOLLOWERS · ◆ TIWAZ + GEBO ◆</div>
+    </div>
+
+    <div class="goal">
+      <div class="row">
+        <span>NEXT GOAL · 2,000</span>
+        <span class="pct">71%</span>
+      </div>
+      <div class="goal-bar"><div class="fill"></div></div>
+    </div>
+
+    <div class="recent">
+      <div class="l"><span>▍ recent.queue</span><span class="cnt">+18 / 24h</span></div>
+      <div class="item"><span class="ts">12:47</span><span class="ar">▸</span><span class="nm">midgard_42</span><span class="tag s">SUB</span></div>
+      <div class="item"><span class="ts">12:31</span><span class="ar">▸</span><span class="nm">thor_dev</span><span class="tag">FOLLOW</span></div>
+      <div class="item"><span class="ts">12:18</span><span class="ar">▸</span><span class="nm">odin_codes</span><span class="tag">FOLLOW</span></div>
+      <div class="item"><span class="ts">11:54</span><span class="ar">▸</span><span class="nm">valhalla_js</span><span class="tag s">SUB</span></div>
+    </div>
+
+    <!-- Drifting rune particles -->
+    <div class="particles">
+      <span>ᛏ</span>
+      <span>ᚷ</span>
+      <span>+1</span>
+      <span>ᛏᚷ</span>
+      <span>◆</span>
+      <span>ᛏ</span>
+    </div>
+
+    <!-- Data flow bottom line -->
+    <svg class="dataline" width="100%" height="2">
+      <line x1="0" y1="1" x2="100%" y2="1" stroke="#4ade80" stroke-width="1" opacity="0.5"
+        stroke-dasharray="4 8" style="animation: rb-data-flow 4s linear infinite"/>
+    </svg>
+  </div>
+</body>
+</html>

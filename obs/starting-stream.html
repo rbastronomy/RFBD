@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Renato Barria · Starting Stream</title>
+  <meta name="description" content="OBS scene · 1920×1080 starting soon screen" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="lib.css" />
+  <style>
+    html, body { background: #06070a; }
+    body { width: 1920px; height: 1080px; overflow: hidden; }
+    .scene { position: relative; width: 1920px; height: 1080px;
+      background: radial-gradient(ellipse at 50% 40%, #0e1a14 0%, #06070a 70%); }
+    /* Subtle hex grid */
+    .grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(74,222,128,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(74,222,128,0.04) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(ellipse at center, #000 30%, transparent 80%);
+    }
+    /* Matrix-style code rain (top + bottom corners) */
+    .rain { position: absolute; top: 0; bottom: 0; width: 200px; overflow: hidden; pointer-events: none; opacity: 0.4; }
+    .rain.l { left: 0; }
+    .rain.r { right: 0; }
+    .rain span {
+      position: absolute; left: var(--x, 0); top: 0;
+      font-family: "JetBrains Mono", monospace; font-size: 14px;
+      color: var(--term); writing-mode: vertical-rl;
+      text-shadow: 0 0 6px var(--term);
+      animation: rb-matrix-fall 12s linear infinite;
+    }
+    @keyframes rb-matrix-fall {
+      from { transform: translateY(-50%); opacity: 0; }
+      10%  { opacity: 0.7; }
+      90%  { opacity: 0.7; }
+      to   { transform: translateY(120vh); opacity: 0; }
+    }
+
+    /* Center hero */
+    .hero {
+      position: absolute; left: 50%; top: 44%;
+      transform: translate(-50%, -50%); text-align: center;
+    }
+    .hero .orbital {
+      position: absolute; left: 50%; top: 50%;
+      transform: translate(-50%, -50%); pointer-events: none;
+    }
+    .hero .rune {
+      position: relative; z-index: 5;
+      animation: rb-rune-drift 4s ease-in-out infinite;
+      filter: drop-shadow(0 0 20px var(--term-faint));
+    }
+    .hero h1 {
+      margin: 36px 0 8px;
+      font-family: "Outfit", sans-serif; font-size: 96px; font-weight: 300;
+      color: var(--ink); letter-spacing: -0.04em; line-height: 1;
+    }
+    .hero h1 .accent { color: var(--term); font-weight: 500; }
+    .hero .eyebrow {
+      font-family: "JetBrains Mono", monospace; font-size: 14px;
+      letter-spacing: 0.52em; color: var(--term);
+      text-transform: uppercase; font-weight: 600;
+    }
+    .hero .sub {
+      margin-top: 6px;
+      font-family: "JetBrains Mono", monospace; font-size: 16px;
+      color: var(--term-dim); letter-spacing: 0.16em;
+    }
+    .hero .sub .cur { animation: rb-blink 0.8s steps(1) infinite; color: var(--term); }
+
+    /* Boot sequence terminal — bottom-left */
+    .boot {
+      position: absolute; left: 80px; bottom: 80px;
+      width: 540px; padding: 18px 22px;
+      background: rgba(6,8,10,0.85);
+      border: 1px solid var(--term-faint);
+      font-family: "JetBrains Mono", monospace; font-size: 14px;
+      color: var(--ink-dim); line-height: 1.7;
+      box-shadow: var(--shadow);
+    }
+    .boot .head {
+      font-size: 10px; letter-spacing: 0.28em; color: var(--term);
+      margin-bottom: 10px; padding-bottom: 8px;
+      border-bottom: 1px solid var(--term-faint); font-weight: 600;
+    }
+    .boot .line { opacity: 0; animation: rb-fade-up 0.4s forwards; }
+    .boot .line:nth-child(2) { animation-delay: 0.5s; }
+    .boot .line:nth-child(3) { animation-delay: 1s; }
+    .boot .line:nth-child(4) { animation-delay: 1.5s; }
+    .boot .line:nth-child(5) { animation-delay: 2s; }
+    .boot .line:nth-child(6) { animation-delay: 2.5s; }
+    .boot .line:nth-child(7) { animation-delay: 3s; }
+    .boot .line .ok { color: var(--term); }
+    .boot .line .info { color: var(--term-dim); }
+    .boot .line .label { color: var(--ink-dim); }
+    .boot .prompt { color: var(--term); }
+
+    /* Bottom-right info card */
+    .info-card {
+      position: absolute; right: 80px; bottom: 80px;
+      width: 480px; padding: 22px 24px;
+      background: rgba(6,8,10,0.85);
+      border: 1px solid var(--term-faint);
+      box-shadow: var(--shadow);
+    }
+    .info-card .row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 0; border-bottom: 1px solid var(--term-faint);
+      font-family: "JetBrains Mono", monospace;
+    }
+    .info-card .row:last-child { border-bottom: none; }
+    .info-card .k {
+      font-size: 10px; letter-spacing: 0.28em;
+      color: var(--term-dim); text-transform: uppercase; font-weight: 600;
+    }
+    .info-card .v {
+      font-size: 15px; color: var(--ink); letter-spacing: 0.04em;
+      font-family: "JetBrains Mono", monospace;
+    }
+    .info-card .v .gn { color: var(--term); }
+
+    /* Loading bar */
+    .loader {
+      position: absolute; left: 50%; top: 78%;
+      transform: translateX(-50%); width: 720px;
+    }
+    .loader .meta {
+      display: flex; justify-content: space-between;
+      font-family: "JetBrains Mono", monospace; font-size: 11px;
+      letter-spacing: 0.32em; color: var(--term-dim);
+      text-transform: uppercase; margin-bottom: 10px; font-weight: 600;
+    }
+    .loader .meta .pct { color: var(--term); }
+    .loader .bar {
+      height: 6px; background: rgba(74,222,128,0.08);
+      border: 1px solid var(--term-faint); overflow: hidden; position: relative;
+    }
+    .loader .bar .fill {
+      position: absolute; left: 0; top: 0; bottom: 0;
+      background: linear-gradient(90deg, var(--term-dim), var(--term));
+      box-shadow: 0 0 8px var(--term-faint);
+      animation: rb-bar-loop 4s ease-in-out infinite;
+    }
+    @keyframes rb-bar-loop {
+      0%   { width: 0%; }
+      60%  { width: 100%; }
+      100% { width: 100%; }
+    }
+    .loader .ticks {
+      margin-top: 8px; display: flex; justify-content: space-between;
+      font-family: "JetBrains Mono", monospace; font-size: 9px;
+      color: var(--term-dim); letter-spacing: 0.2em;
+    }
+
+    /* Top status bar */
+    .top {
+      position: absolute; top: 40px; left: 80px; right: 80px;
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: "JetBrains Mono", monospace;
+    }
+    .top .session {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 12px; letter-spacing: 0.28em; color: var(--term-dim);
+      text-transform: uppercase; font-weight: 600;
+    }
+    .top .session .dot {
+      width: 8px; height: 8px; border-radius: 50%; background: var(--term);
+      box-shadow: 0 0 8px var(--term);
+      animation: rb-blink 1.6s steps(1) infinite;
+    }
+    .top .session .v { color: var(--term); }
+    .top .time {
+      font-size: 11px; letter-spacing: 0.32em; color: var(--term-dim);
+      text-transform: uppercase; font-weight: 600;
+    }
+
+    /* Bottom data lines */
+    .data-line {
+      position: absolute; left: 0; right: 0; height: 4px;
+    }
+    .data-line svg { width: 100%; height: 4px; display: block; }
+    .data-line.top { top: 0; }
+    .data-line.bot { bottom: 0; }
+  </style>
+</head>
+<body>
+  <div class="scene">
+    <div class="grid"></div>
+
+    <!-- Matrix rain decorations -->
+    <div class="rain l">
+      <span style="--x:20px;animation-delay:0s">0110ᛏᚷ&gt;0xfeᛒ</span>
+      <span style="--x:60px;animation-delay:2s">▸/init.ok</span>
+      <span style="--x:100px;animation-delay:4s">ᛏ▍0x4ade80</span>
+      <span style="--x:140px;animation-delay:6s">0101&gt;ᚷ▊</span>
+    </div>
+    <div class="rain r">
+      <span style="--x:30px;animation-delay:1s">connect()&gt;ᛏ</span>
+      <span style="--x:80px;animation-delay:3s">ᚷ0xfe·ok</span>
+      <span style="--x:130px;animation-delay:5s">▍boot.sh</span>
+      <span style="--x:170px;animation-delay:7s">ᛒᛏᚷ▸load</span>
+    </div>
+
+    <!-- Top status -->
+    <div class="top">
+      <div class="session">
+        <span class="dot"></span>
+        <span>SESSION ·</span>
+        <span class="v">INITIALIZING</span>
+      </div>
+      <div class="time">stream.ts // 23·05·2026 // 21:00 CLT</div>
+    </div>
+
+    <!-- Top + bottom flowing data lines -->
+    <div class="data-line top"><svg><line x1="0" y1="2" x2="100%" y2="2" stroke="#4ade80" stroke-width="1" opacity="0.5" stroke-dasharray="4 8" style="animation: rb-data-flow 4s linear infinite"/></svg></div>
+    <div class="data-line bot"><svg><line x1="0" y1="2" x2="100%" y2="2" stroke="#4ade80" stroke-width="1" opacity="0.5" stroke-dasharray="4 8" style="animation: rb-data-flow 4s linear infinite reverse"/></svg></div>
+
+    <!-- Center hero -->
+    <div class="hero">
+      <!-- Outer orbital -->
+      <div class="orbital" style="animation: rb-orbit 40s linear infinite;">
+        <svg width="500" height="500" viewBox="0 0 500 500">
+          <circle cx="250" cy="250" r="220" fill="none" stroke="rgba(74,222,128,0.10)" stroke-width="1" stroke-dasharray="2 12"/>
+          <circle cx="470" cy="250" r="4" fill="#4ade80"/>
+        </svg>
+      </div>
+      <div class="orbital" style="animation: rb-orbit-r 28s linear infinite;">
+        <svg width="380" height="380" viewBox="0 0 380 380">
+          <circle cx="190" cy="190" r="170" fill="none" stroke="rgba(74,222,128,0.18)" stroke-width="1" stroke-dasharray="6 10"/>
+          <circle cx="20" cy="190" r="3" fill="#4ade80"/>
+          <circle cx="360" cy="190" r="3" fill="#4ade80"/>
+        </svg>
+      </div>
+      <div class="orbital" style="animation: rb-orbit 18s linear infinite; opacity: 0.6;">
+        <svg width="260" height="260" viewBox="0 0 260 260">
+          <circle cx="130" cy="130" r="120" fill="none" stroke="rgba(74,222,128,0.22)" stroke-width="0.8"/>
+          <circle cx="250" cy="130" r="2.5" fill="#4ade80"/>
+        </svg>
+      </div>
+
+      <!-- Bindrune -->
+      <div class="rune">
+        <svg width="160" height="200" viewBox="0 0 160 200">
+          <g fill="none" stroke="#e6f7ec" stroke-width="4" stroke-linecap="round">
+            <line x1="80" y1="14" x2="80" y2="186"/>
+            <line x1="80" y1="14" x2="32" y2="62"/>
+            <line x1="80" y1="14" x2="128" y2="62"/>
+            <line x1="32" y1="80" x2="128" y2="130"/>
+            <line x1="32" y1="130" x2="128" y2="80"/>
+          </g>
+          <circle cx="80" cy="14" r="6" fill="#e6f7ec"/>
+          <circle cx="32" cy="62" r="6" fill="#e6f7ec"/>
+          <circle cx="128" cy="62" r="6" fill="#e6f7ec"/>
+          <circle cx="32" cy="80" r="6" fill="#e6f7ec"/>
+          <circle cx="128" cy="80" r="6" fill="#e6f7ec"/>
+          <circle cx="32" cy="130" r="6" fill="#e6f7ec"/>
+          <circle cx="128" cy="130" r="6" fill="#e6f7ec"/>
+          <circle cx="80" cy="186" r="8" fill="#4ade80" style="filter: drop-shadow(0 0 12px #4ade80)"/>
+        </svg>
+      </div>
+
+      <h1>STREAM <span class="accent">STARTS</span> SOON</h1>
+      <div class="eyebrow">◆ TIWAZ + GEBO · BINDRUNE ◆</div>
+      <div class="sub">preparando el setup <span class="cur">▊</span></div>
+    </div>
+
+    <!-- Loading bar -->
+    <div class="loader">
+      <div class="meta">
+        <span>▸ booting stream.exe</span>
+        <span class="pct">68%</span>
+      </div>
+      <div class="bar"><div class="fill"></div></div>
+      <div class="ticks">
+        <span>obs.linked</span><span>db.connected</span><span>chat.relay</span><span>timer.armed</span><span>ready</span>
+      </div>
+    </div>
+
+    <!-- Boot sequence (bottom-left) -->
+    <div class="boot">
+      <div class="head">▍ stream.boot.sh</div>
+      <div class="line"><span class="prompt">$</span> <span class="label">init.runas</span> --bind=tiwaz,gebo</div>
+      <div class="line"><span class="ok">✓</span> bindrune verified · ᛏᚷ · signature OK</div>
+      <div class="line"><span class="ok">✓</span> obs scene loaded · 1920x1080 · 60fps</div>
+      <div class="line"><span class="ok">✓</span> chat relay <span class="info">connected</span> · 142 lurking</div>
+      <div class="line"><span class="ok">✓</span> game.process attached · steam@valhalla</div>
+      <div class="line"><span class="ok">✓</span> ready in <span class="info">3s</span> · greeting queue</div>
+      <div class="line"><span class="prompt">$</span> awaiting host <span class="rb-cursor">▊</span></div>
+    </div>
+
+    <!-- Info card (bottom-right) -->
+    <div class="info-card">
+      <div class="row">
+        <span class="k">▍ now playing</span>
+        <span class="v">God of War (2018)</span>
+      </div>
+      <div class="row">
+        <span class="k">▍ category</span>
+        <span class="v"><span class="gn">Any%</span> · Give Me a Story</span>
+      </div>
+      <div class="row">
+        <span class="k">▍ host</span>
+        <span class="v">rbastronomy</span>
+      </div>
+      <div class="row">
+        <span class="k">▍ github</span>
+        <span class="v">github.com/rbastronomy</span>
+      </div>
+      <div class="row">
+        <span class="k">▍ contact</span>
+        <span class="v">rfbdsistemas@hotmail.com</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

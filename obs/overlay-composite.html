@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Renato Barria · OBS Layout Preview</title>
+  <meta name="description" content="Composite preview of all OBS browser sources at their final positions" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: #06070a; }
+    body { width: 1920px; height: 1080px; overflow: hidden;
+      font-family: "Outfit", system-ui, sans-serif; }
+
+    .stage { position: relative; width: 1920px; height: 1080px; }
+
+    iframe {
+      border: 0; display: block; background: transparent;
+    }
+    .panel-iframe { position: absolute; left: 0; top: 0; width: 380px; height: 680px; }
+    .counter-iframe { position: absolute; left: 0; top: 680px; width: 380px; height: 400px; }
+    .strip-iframe { position: absolute; left: 380px; top: 866px; width: 1540px; height: 214px; }
+
+    /* Game placeholder — 16:9 area top-right.
+       In real OBS use, this is the Game Capture / Video Capture source. */
+    .game {
+      position: absolute; left: 380px; top: 0;
+      width: 1540px; height: 866px;
+      background:
+        radial-gradient(ellipse at 50% 40%, #1a1f1c 0%, #0e1010 70%, #06070a 100%);
+      overflow: hidden;
+    }
+    .game::before {
+      content: "";
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(rgba(74,222,128,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(74,222,128,0.06) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(ellipse at center, #000 30%, transparent 80%);
+    }
+    .game .label {
+      position: absolute; left: 50%; top: 50%;
+      transform: translate(-50%, -50%); text-align: center;
+    }
+    .game .label .eyebrow {
+      font-family: "JetBrains Mono", monospace; font-size: 13px;
+      letter-spacing: 0.52em; color: #4ade80;
+      text-transform: uppercase; font-weight: 600;
+    }
+    .game .label h2 {
+      margin-top: 14px;
+      font-family: "Outfit", sans-serif; font-size: 56px; font-weight: 200;
+      color: rgba(230,247,236,0.92); letter-spacing: -0.02em;
+    }
+    .game .label .sub {
+      margin-top: 8px; font-family: "JetBrains Mono", monospace; font-size: 13px;
+      color: rgba(230,247,236,0.45); letter-spacing: 0.16em;
+    }
+    /* Crosshairs corners for game area */
+    .game .crosshair { position: absolute; width: 28px; height: 28px; }
+    .game .crosshair::before, .game .crosshair::after {
+      content: ""; position: absolute; background: rgba(74,222,128,0.5);
+    }
+    .game .crosshair::before { width: 28px; height: 2px; }
+    .game .crosshair::after { width: 2px; height: 28px; }
+    .game .crosshair.tl { left: 20px; top: 20px; }
+    .game .crosshair.tr { right: 20px; top: 20px; }
+    .game .crosshair.tr::before { right: 0; }
+    .game .crosshair.bl { left: 20px; bottom: 20px; }
+    .game .crosshair.bl::after { bottom: 0; }
+    .game .crosshair.br { right: 20px; bottom: 20px; }
+    .game .crosshair.br::before { right: 0; }
+    .game .crosshair.br::after { bottom: 0; }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <!-- Game 16:9 placeholder (replace with OBS Game Capture in production) -->
+    <div class="game">
+      <div class="crosshair tl"></div>
+      <div class="crosshair tr"></div>
+      <div class="crosshair bl"></div>
+      <div class="crosshair br"></div>
+      <div class="label">
+        <div class="eyebrow">◆ GAME CAPTURE · 16:9 ◆</div>
+        <h2>1540 × 866</h2>
+        <div class="sub">// OBS source layer goes here</div>
+      </div>
+    </div>
+
+    <iframe class="panel-iframe"   src="panel-terminal.html"      title="Splits panel"></iframe>
+    <iframe class="counter-iframe" src="follower-counter.html"    title="Follower counter"></iframe>
+    <iframe class="strip-iframe"   src="notifications-strip.html" title="Notifications strip"></iframe>
+  </div>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Renato Barria · Splits Panel</title>
+  <meta name="description" content="OBS browser source · 380×680 transparent" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="lib.css" />
+  <style>
+    body { width: 380px; height: 680px; }
+    .panel {
+      width: 380px; height: 680px;
+      display: flex; flex-direction: column;
+    }
+    .branding {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--term-faint);
+      display: flex; align-items: center; gap: 12px;
+    }
+    .branding .meta {
+      flex: 1; border-left: 1px solid var(--term-faint); padding-left: 12px;
+    }
+    .branding .name {
+      font-family: "Outfit", sans-serif; font-size: 14px; font-weight: 600;
+      letter-spacing: 0.08em; color: var(--ink);
+    }
+    .branding .sub {
+      margin-top: 3px; font-size: 9px; letter-spacing: 0.22em;
+      color: var(--term-dim); text-transform: uppercase;
+    }
+    .branding .live {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 9px; letter-spacing: 0.28em; color: var(--red); font-weight: 600;
+    }
+    .game-info {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--term-faint);
+    }
+    .game-info .title {
+      font-family: "Outfit", sans-serif; font-size: 20px; font-weight: 500;
+      color: var(--ink); letter-spacing: -0.005em; line-height: 1.1;
+    }
+    .game-info .cat {
+      margin-top: 5px; font-size: 10px; letter-spacing: 0.16em;
+      color: var(--term); text-transform: uppercase; font-weight: 500;
+    }
+    .game-info .attempt {
+      margin-top: 5px; font-size: 9px; color: var(--term-dim); letter-spacing: 0.14em;
+    }
+    .splits-list { flex: 1; padding: 8px 16px; overflow: hidden; min-height: 0; }
+    .splits-list .row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 6px 8px 6px 10px;
+      border-bottom: 1px solid rgba(74,222,128,0.06);
+      border-left: 2px solid transparent;
+      transition: background .2s;
+    }
+    .splits-list .name {
+      font-size: 12px; color: rgba(230,247,236,0.88);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .splits-list .pending .name { color: var(--term-dim); }
+    .splits-list .right { display: flex; gap: 12px; align-items: baseline; }
+    .splits-list .delta {
+      font-size: 10px; min-width: 32px; text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    .splits-list .ahead { color: var(--term); }
+    .splits-list .behind { color: var(--red); }
+    .splits-list .gold { color: var(--gold); text-shadow: 0 0 4px rgba(251,191,36,0.5); }
+    .splits-list .time {
+      font-size: 12px; min-width: 60px; text-align: right;
+      font-variant-numeric: tabular-nums; color: var(--ink);
+    }
+    .splits-list .pending .time, .splits-list .pending .delta { color: var(--term-dim); }
+    .splits-list .star { font-size: 10px; color: var(--gold); text-shadow: 0 0 4px rgba(251,191,36,0.6); }
+
+    .timer-block {
+      padding: 14px 16px 12px;
+      border-top: 1px solid var(--term-dim);
+      background: rgba(74,222,128,0.04);
+    }
+    .timer-block .head {
+      display: flex; align-items: baseline; justify-content: space-between;
+      font-size: 9px; letter-spacing: 0.28em; color: var(--term-dim);
+      text-transform: uppercase; font-weight: 600;
+    }
+    .timer-block .delta { color: var(--term); font-size: 10px; letter-spacing: 0.14em; }
+    .timer-block .time {
+      margin-top: 4px;
+      font-family: "JetBrains Mono", monospace; font-size: 52px;
+      font-weight: 500; color: var(--ink); letter-spacing: 0.01em;
+      font-variant-numeric: tabular-nums; line-height: 1.05;
+      text-shadow: 0 0 20px var(--term-faint);
+    }
+    .timer-block .ms { font-size: 26px; color: var(--term); }
+    .stats {
+      padding: 8px 16px 14px;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 8px 16px; border-top: 1px solid var(--term-faint);
+      background: rgba(74,222,128,0.02);
+    }
+    .stats .k {
+      font-size: 8px; letter-spacing: 0.24em; color: var(--term-dim);
+      text-transform: uppercase; font-weight: 600;
+    }
+    .stats .v {
+      margin-top: 2px; font-size: 12px; color: var(--ink);
+      font-variant-numeric: tabular-nums; letter-spacing: 0.04em;
+    }
+  </style>
+</head>
+<body>
+  <div class="rb-panel panel">
+    <div class="rb-term-head">
+      <div class="dots">
+        <i class="r"></i><i class="y"></i><i class="g"></i>
+        <span class="path">rbastronomy@valhalla:~$</span>
+      </div>
+      <span class="right">SECURE</span>
+    </div>
+
+    <div class="branding">
+      <!-- Bindrune SVG (Tiwaz + Gebo) -->
+      <svg width="32" height="40" viewBox="0 0 32 40" class="rb-rune"
+        style="animation: rb-rune-pulse 3s ease-in-out infinite">
+        <g fill="none" stroke="#e6f7ec" stroke-width="1.7" stroke-linecap="round">
+          <line x1="16" y1="4" x2="16" y2="36"/>
+          <line x1="16" y1="4" x2="6" y2="14"/>
+          <line x1="16" y1="4" x2="26" y2="14"/>
+          <line x1="6" y1="18" x2="26" y2="28"/>
+          <line x1="6" y1="28" x2="26" y2="18"/>
+        </g>
+        <circle cx="16" cy="4" r="2.2" fill="#e6f7ec"/>
+        <circle cx="6" cy="14" r="2.2" fill="#e6f7ec"/>
+        <circle cx="26" cy="14" r="2.2" fill="#e6f7ec"/>
+        <circle cx="6" cy="18" r="2.2" fill="#e6f7ec"/>
+        <circle cx="26" cy="18" r="2.2" fill="#e6f7ec"/>
+        <circle cx="6" cy="28" r="2.2" fill="#e6f7ec"/>
+        <circle cx="26" cy="28" r="2.2" fill="#e6f7ec"/>
+        <circle cx="16" cy="36" r="2.5" fill="#4ade80"/>
+      </svg>
+      <div class="meta">
+        <div class="name">RBASTRONOMY</div>
+        <div class="sub"><span style="color:var(--term)">$</span> speedrunner.exe</div>
+      </div>
+      <div class="live">
+        <span class="rb-live-dot"></span>LIVE
+      </div>
+    </div>
+
+    <div class="game-info">
+      <div class="rb-label"><span class="lt">&gt;</span> game.load()</div>
+      <div class="title">God of War (2018)</div>
+      <div class="cat">▸ Any% · Give Me a Story</div>
+      <div class="attempt">attempt #042 · 14/89 PB · seed=valhalla</div>
+    </div>
+
+    <div style="padding: 10px 16px 4px">
+      <div class="rb-label">▍ splits.log</div>
+    </div>
+    <div class="splits-list">
+      <div class="row"><span class="name">Wildwoods</span><span class="right"><span class="delta ahead">-0:02</span><span class="time">00:03:14</span></span></div>
+      <div class="row"><span class="name"><span class="star">★</span>Wake-Up Cliffs</span><span class="right"><span class="delta gold">-0:08</span><span class="time">00:08:42</span></span></div>
+      <div class="row"><span class="name">Stone Falls</span><span class="right"><span class="delta ahead">-0:04</span><span class="time">00:13:21</span></span></div>
+      <div class="row"><span class="name">Lake of Nine</span><span class="right"><span class="delta behind">+0:11</span><span class="time">00:22:50</span></span></div>
+      <div class="row rb-current"><span class="name">Tyr's Temple <span class="rb-cursor">▊</span></span><span class="right"><span class="delta" style="color:var(--term)"></span><span class="time" style="color:var(--term-dim)">—</span></span></div>
+      <div class="row pending"><span class="name">Veithurgard</span><span class="right"><span class="delta"></span><span class="time">—</span></span></div>
+      <div class="row pending"><span class="name">Witch's Cave</span><span class="right"><span class="delta"></span><span class="time">—</span></span></div>
+      <div class="row pending"><span class="name">Jötunheim Tower</span><span class="right"><span class="delta"></span><span class="time">—</span></span></div>
+      <div class="row pending" style="border-bottom: none"><span class="name">Final · Baldur</span><span class="right"><span class="delta"></span><span class="time">—</span></span></div>
+    </div>
+
+    <div class="timer-block">
+      <div class="head">
+        <span>▍ timer.tick</span>
+        <span class="delta">AHEAD −0:14.8</span>
+      </div>
+      <div class="time">00:27:42<span class="ms rb-cursor">.34</span></div>
+    </div>
+
+    <div class="stats">
+      <div><div class="k">Personal Best</div><div class="v">00:42:18</div></div>
+      <div><div class="k">Sum of Best</div><div class="v">00:39:47</div></div>
+      <div><div class="k">Best Possible</div><div class="v">00:41:22</div></div>
+      <div><div class="k">Average</div><div class="v">00:46:08</div></div>
+    </div>
+  </div>
+</body>
+</html>
