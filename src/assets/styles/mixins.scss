@@ -1,0 +1,27 @@
+// Breakpoints (mobile-first; use max-width for "below")
+@mixin below($bp) {
+  @media (max-width: #{$bp - 1px}) {
+    @content;
+  }
+}
+
+$bp-sm: 640px;
+$bp-md: 900px;
+$bp-lg: 1200px;
+
+// Monospace telemetry label — used for metadata, nav, unit IDs
+@mixin telemetry {
+  font-family: var(--f-mono);
+  font-size: var(--fs-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--c-muted);
+}
+
+// Macro display type — solid architectural blocks
+@mixin macro {
+  font-family: var(--f-display);
+  text-transform: uppercase;
+  letter-spacing: -0.04em;
+  line-height: 0.88;
+}

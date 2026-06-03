@@ -1,0 +1,132 @@
+@use "./reset.scss";
+@use "./variables.scss";
+@use "./lenis.scss";
+@use "./mixins.scss" as *;
+
+html {
+  background: var(--c-bg);
+  color: var(--c-fg);
+  font-family: var(--f-body);
+  font-size: var(--fs-body);
+  transition:
+    background-color 0.4s ease,
+    color 0.4s ease;
+
+  --vh: 1vh;
+  --dvh: 1dvh;
+}
+
+body {
+  position: relative;
+  overflow-x: hidden;
+}
+
+// Smooth cross-fade of every themed surface while toggling (added briefly by useTheme)
+:root.theme-anim *,
+:root.theme-anim *::before,
+:root.theme-anim *::after {
+  transition:
+    background-color 0.4s ease,
+    border-color 0.4s ease,
+    color 0.4s ease,
+    fill 0.4s ease,
+    stroke 0.4s ease !important;
+}
+
+::selection {
+  background: var(--c-accent);
+  color: var(--c-on-accent);
+  text-shadow: none;
+}
+
+// --- Mechanical noise: global low-opacity grain over the whole DOM ---
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  pointer-events: none;
+  opacity: var(--noise-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::after {
+    display: none;
+  }
+}
+
+// ============================================================
+// Structural utilities
+// ============================================================
+
+.container {
+  width: 100%;
+  padding-inline: var(--gutter);
+  margin-inline: auto;
+  max-width: 1600px;
+}
+
+// Full-bleed structural divider
+.hr {
+  border: none;
+  border-top: var(--border-w) solid var(--c-line-strong);
+  width: 100%;
+}
+
+.telemetry {
+  @include telemetry;
+}
+
+.macro {
+  @include macro;
+}
+
+// Accent text
+.accent {
+  color: var(--c-accent);
+}
+
+// Crosshair marker (grid intersection symbol)
+.crosshair {
+  font-family: var(--f-mono);
+  color: var(--c-accent);
+  user-select: none;
+}
+
+// Reveal initial state (GSAP toggles via .is-in)
+.reveal {
+  will-change: transform, opacity;
+}
+
+// ============================================================
+// Boot / preloader
+// ============================================================
+
+// Lock scroll while the boot/preloader screen is showing.
+html.boot-lock,
+html.boot-lock body {
+  overflow: hidden !important;
+}
+
+// Warm the page in (like a CRT image settling) as the preloader cross-fades out.
+html.boot-reveal #app {
+  animation: app-warm-in 1s ease both;
+}
+
+@keyframes app-warm-in {
+  0% {
+    opacity: 0.4;
+    filter: brightness(1.18) saturate(0.85) blur(1.5px);
+  }
+  100% {
+    opacity: 1;
+    filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.boot-reveal #app {
+    animation: none;
+  }
+}

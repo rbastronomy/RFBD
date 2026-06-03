@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Renato — Desarrollador Full Stack · Diseñador Web & SaaS</title>
+    <meta
+      name="description"
+      content="Renato — Desarrollador Full Stack, Diseñador Web y de SaaS. Diseño y construyo sistemas a medida donde la tecnología se siente cómoda y se pone al servicio de la visión de cada cliente."
+    />
+    <meta name="robots" content="index, follow" />
+
+    <meta property="og:title" content="Renato — Desarrollador Full Stack · Diseñador Web & SaaS" />
+    <meta
+      property="og:description"
+      content="Diseño y construyo sistemas a medida donde la tecnología se siente cómoda y se pone al servicio de la visión de cada cliente."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#0A0A0A" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Outfit:wght@500;600;700&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+      // Set theme + lang before paint to avoid FOUC.
+      (function () {
+        try {
+          var t = localStorage.getItem("renato-theme");
+          document.documentElement.dataset.theme = t === "light" ? "light" : "dark";
+          var l = localStorage.getItem("renato-locale");
+          document.documentElement.lang = l === "en" ? "en" : "es";
+        } catch (e) {}
+      })();
+    </script>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

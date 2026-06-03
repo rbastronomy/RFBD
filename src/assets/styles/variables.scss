@@ -1,0 +1,57 @@
+// ============================================================
+// Design tokens — Industrial Brutalism, themed (dark default + light)
+// Accent = Renato's brand green (#1f8a4d). Ref: brutalist-skill + brand logo.
+// ============================================================
+
+:root {
+  // -- DARK (default) — warm charcoal + cream phosphor --
+  --c-bg: #1b1b16;
+  --c-bg-raised: #232319;
+  --c-fg: #f5f1ea;
+  --c-muted: #9a968c;
+  --c-line: #322f27;
+  --c-line-strong: #454136;
+  --c-accent: #2aa15a; // brand green, brightened for dark contrast
+  --c-on-accent: #0d0d0a;
+  --noise-opacity: 0.05;
+
+  // -- Type families --
+  --f-display: "Archivo Black", "Arial Black", sans-serif;
+  --f-wordmark: "Outfit", system-ui, sans-serif;
+  --f-body: "Space Grotesk", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  // -- Fluid macro type scale --
+  --fs-hero: clamp(4rem, 16vw, 18rem);
+  --fs-h1: clamp(2.5rem, 9vw, 8rem);
+  --fs-h2: clamp(2rem, 6vw, 5rem);
+  --fs-h3: clamp(1.5rem, 4vw, 3rem);
+  --fs-body: clamp(1rem, 1.1vw, 1.125rem);
+  --fs-mono: 0.8125rem;
+
+  // -- Spacing / structure --
+  --gutter: clamp(1rem, 4vw, 4rem);
+  --section-pad: clamp(4rem, 12vh, 12rem);
+  --border-w: 2px;
+  --hairline: 1px;
+
+  // -- Z-index scale --
+  --z-base: 1;
+  --z-content: 10;
+  --z-header: 40;
+  --z-overlay: 60;
+  --z-cursor: 90;
+}
+
+// -- LIGHT — unbleached documentation paper + carbon ink --
+:root[data-theme="light"] {
+  --c-bg: #f0eee6;
+  --c-bg-raised: #e7e4da;
+  --c-fg: #14140f;
+  --c-muted: #5b5a52;
+  --c-line: #d9d6cb;
+  --c-line-strong: #c3bfb1;
+  --c-accent: #1f8a4d; // brand green
+  --c-on-accent: #ffffff;
+  --noise-opacity: 0.035;
+}
