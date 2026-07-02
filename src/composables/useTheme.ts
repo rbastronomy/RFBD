@@ -7,7 +7,7 @@ const KEY = "renato-theme";
 const stored =
   typeof localStorage !== "undefined" ? (localStorage.getItem(KEY) as Theme | null) : null;
 
-export const theme = ref<Theme>(stored === "light" ? "light" : "dark");
+export const theme = ref<Theme>(stored === "dark" ? "dark" : "light");
 
 const reduceMotion = () =>
   typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;

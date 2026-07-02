@@ -1,39 +1,80 @@
 // ============================================================
-// Design tokens — Industrial Brutalism, themed (dark default + light)
-// Accent = Renato's brand green (#1f8a4d). Ref: brutalist-skill + brand logo.
+// Design tokens — "Studio" system (light-first, professional).
+// Adapted from the open-design.ai aesthetic: clean off-white surfaces,
+// soft rounded cards, editorial serif display + Albert Sans body, with
+// Renato's brand green kept as a restrained accent (no neon graffiti).
 // ============================================================
 
 :root {
-  // -- DARK (default) — warm charcoal + cream phosphor --
-  --c-bg: #1b1b16;
-  --c-bg-raised: #232319;
-  --c-fg: #f5f1ea;
-  --c-muted: #9a968c;
-  --c-line: #322f27;
-  --c-line-strong: #454136;
-  --c-accent: #2aa15a; // brand green, brightened for dark contrast
-  --c-on-accent: #0d0d0a;
-  --noise-opacity: 0.05;
+  // -- LIGHT (default) — off-white paper + carbon ink --
+  --c-bg: #fafafa;
+  --c-bg-raised: #ffffff;
+  --c-bg-sunken: #f1f0ec;
+  --c-fg: #1a1a1a;
+  --c-fg-soft: #434343;
+  --c-muted: #6e6e6e;
+  --c-line: rgba(20, 20, 15, 0.1);
+  --c-line-strong: rgba(20, 20, 15, 0.18);
 
-  // -- Type families --
-  --f-display: "Archivo Black", "Arial Black", sans-serif;
-  --f-wordmark: "Outfit", system-ui, sans-serif;
-  --f-body: "Space Grotesk", system-ui, sans-serif;
+  // Brand green — vivid accent (chips, active pills, details).
+  --c-accent: #1fa64c;
+  --c-accent-strong: #18853d;
+  --c-accent-soft: rgba(31, 166, 76, 0.13);
+  --c-on-accent: #ffffff;
+  // Bright lime — used for big numbers/labels over the oil-painting cards.
+  --c-lime: #46e05a;
+
+  // Dark "ink" surface for primary buttons / pills.
+  --c-ink: #1a1a1a;
+  --c-on-ink: #fafafa;
+
+  --noise-opacity: 0.006;
+
+  // -- Liquid glass surfaces (visionOS: translucent, blurred, specular) --
+  --glass-bg: color-mix(in srgb, var(--c-bg-raised) 55%, transparent);
+  --glass-bg-strong: color-mix(in srgb, var(--c-bg-raised) 74%, transparent);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-line: color-mix(in srgb, var(--c-fg) 8%, transparent);
+  --glass-blur: 18px;
+  // Top-edge sheen painted over the pane (gives the "liquid" specular look)
+  --glass-sheen: rgba(255, 255, 255, 0.5);
+  --glass-shadow:
+    0 16px 44px -16px rgba(21, 20, 15, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+
+  // -- Type families (Albert Sans throughout, like the reference) --
+  --f-display: "Albert Sans", system-ui, sans-serif;
+  --f-wordmark: "Albert Sans", system-ui, sans-serif;
+  --f-body: "Albert Sans", system-ui, sans-serif;
   --f-mono: "JetBrains Mono", ui-monospace, monospace;
 
-  // -- Fluid macro type scale --
-  --fs-hero: clamp(4rem, 16vw, 18rem);
-  --fs-h1: clamp(2.5rem, 9vw, 8rem);
-  --fs-h2: clamp(2rem, 6vw, 5rem);
-  --fs-h3: clamp(1.5rem, 4vw, 3rem);
-  --fs-body: clamp(1rem, 1.1vw, 1.125rem);
-  --fs-mono: 0.8125rem;
+  // -- Fluid type scale --
+  --fs-hero: clamp(2.75rem, 7vw, 6.5rem);
+  --fs-h1: clamp(2.25rem, 5vw, 4rem);
+  --fs-h2: clamp(1.9rem, 4vw, 3rem);
+  --fs-h3: clamp(1.35rem, 2.4vw, 2rem);
+  --fs-lead: clamp(1.05rem, 1.4vw, 1.3rem);
+  --fs-body: clamp(1rem, 1.05vw, 1.0625rem);
+  --fs-mono: 0.78rem;
 
   // -- Spacing / structure --
-  --gutter: clamp(1rem, 4vw, 4rem);
-  --section-pad: clamp(4rem, 12vh, 12rem);
-  --border-w: 2px;
+  --gutter: clamp(1.25rem, 5vw, 4rem);
+  --section-pad: clamp(4.5rem, 11vh, 9rem);
+  --maxw: 1240px;
+  --border-w: 1.5px;
   --hairline: 1px;
+
+  // -- Radii --
+  --radius-sm: 12px;
+  --radius: 18px;
+  --radius-lg: 28px;
+  --radius-pill: 999px;
+
+  // -- Soft shadows (reusable) — airy, diffuse, frutiger-aero --
+  --shadow-soft: 0 6px 24px rgba(21, 20, 15, 0.05);
+  --shadow-card: 0 12px 34px -10px rgba(21, 20, 15, 0.12), 0 1px 0 rgba(255, 255, 255, 0.4) inset;
+  --shadow-pop: 0 24px 60px -16px rgba(21, 20, 15, 0.22);
 
   // -- Z-index scale --
   --z-base: 1;
@@ -43,15 +84,40 @@
   --z-cursor: 90;
 }
 
-// -- LIGHT — unbleached documentation paper + carbon ink --
-:root[data-theme="light"] {
-  --c-bg: #f0eee6;
-  --c-bg-raised: #e7e4da;
-  --c-fg: #14140f;
-  --c-muted: #5b5a52;
-  --c-line: #d9d6cb;
-  --c-line-strong: #c3bfb1;
-  --c-accent: #1f8a4d; // brand green
-  --c-on-accent: #ffffff;
-  --noise-opacity: 0.035;
+// -- DARK — warm charcoal, kept as an opt-in secondary theme --
+:root[data-theme="dark"] {
+  --c-bg: #16160f;
+  --c-bg-raised: #20201a;
+  --c-bg-sunken: #100f0b;
+  --c-fg: #f4f1ea;
+  --c-fg-soft: #cfccc2;
+  --c-muted: #9a968c;
+  --c-line: rgba(245, 241, 234, 0.12);
+  --c-line-strong: rgba(245, 241, 234, 0.22);
+
+  --c-accent: #2aa15a;
+  --c-accent-strong: #36b96b;
+  --c-accent-soft: rgba(42, 161, 90, 0.16);
+  --c-on-accent: #0d0d0a;
+  --c-lime: #46e05a;
+
+  --c-ink: #f4f1ea;
+  --c-on-ink: #16160f;
+
+  --noise-opacity: 0.012;
+
+  // Liquid glass on dark: subtle luminous panes
+  --glass-bg: color-mix(in srgb, var(--c-bg-raised) 52%, transparent);
+  --glass-bg-strong: color-mix(in srgb, var(--c-bg-raised) 74%, transparent);
+  --glass-border: rgba(245, 241, 234, 0.22);
+  --glass-line: color-mix(in srgb, var(--c-fg) 12%, transparent);
+  --glass-sheen: rgba(245, 241, 234, 0.14);
+  --glass-shadow:
+    0 16px 44px -16px rgba(0, 0, 0, 0.62),
+    inset 0 1px 0 rgba(245, 241, 234, 0.14),
+    inset 0 0 0 1px rgba(245, 241, 234, 0.05);
+
+  --shadow-soft: 0 6px 24px rgba(0, 0, 0, 0.4);
+  --shadow-card: 0 14px 40px -12px rgba(0, 0, 0, 0.5), 0 1px 0 rgba(245, 241, 234, 0.05) inset;
+  --shadow-pop: 0 24px 60px -16px rgba(0, 0, 0, 0.6);
 }

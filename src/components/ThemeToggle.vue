@@ -21,16 +21,20 @@ import { theme, toggleTheme } from "@/composables/useTheme";
   gap: 0.4em;
   align-items: center;
   font-family: var(--f-mono);
-  font-size: var(--fs-mono);
-  letter-spacing: 0.1em;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--c-muted);
-  border: var(--border-w) solid var(--c-line-strong);
-  padding: 0.5rem 0.75rem;
-  transition: border-color 0.2s;
+  border: var(--hairline) solid var(--c-line);
+  border-radius: var(--radius-pill);
+  padding: 0.42rem 0.7rem;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
 
   &:hover {
-    border-color: var(--c-accent);
+    border-color: var(--c-line-strong);
+    background: var(--c-accent-soft);
   }
 
   span.active {

@@ -50,11 +50,6 @@ ol {
   list-style: none;
 }
 
-// Brutalism: no rounded corners anywhere by default.
-* {
-  border-radius: 0 !important;
-}
-
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

@@ -1,40 +1,36 @@
 <script setup lang="ts">
 import { useTranslations } from "@/i18n/useTranslations";
-import Github from "@/components/icons/Github.vue";
-import Instagram from "@/components/icons/Instagram.vue";
 import Mail from "@/components/icons/Mail.vue";
+import Github from "@/components/icons/Github.vue";
 
 const { t } = useTranslations();
-
 const EMAIL = "rfbdsistemas@hotmail.com";
 </script>
 
 <template>
   <section id="contact" class="contact">
-    <div class="contact__inner container" v-reveal="{ x: -80 }">
-      <p class="telemetry"><span class="crosshair">+</span> {{ t.contact.label }}</p>
+    <div class="container">
+      <div class="contact__card" v-reveal :style="{ backgroundImage: `url(/art/5.jpg)` }">
+        <div class="contact__inner">
+          <span class="contact__kicker">{{ t.contact.kicker }}</span>
+          <h2 class="contact__heading">{{ t.contact.heading }}</h2>
+          <p class="contact__body">{{ t.contact.body }}</p>
 
-      <h2 class="contact__heading macro">{{ t.contact.heading }}</h2>
-      <p class="contact__body">{{ t.contact.body }}</p>
-
-      <a class="contact__email" :href="`mailto:${EMAIL}`">
-        <Mail /> <span>{{ EMAIL }}</span>
-      </a>
-
-      <hr class="hr" />
-
-      <ul class="contact__social">
-        <li>
-          <a href="https://github.com/rbastronomy" target="_blank" rel="noopener noreferrer">
-            <Github /> <span class="telemetry">GitHub / rbastronomy</span>
-          </a>
-        </li>
-        <li>
-          <a href="https://instagram.com/rb_astronomy" target="_blank" rel="noopener noreferrer">
-            <Instagram /> <span class="telemetry">Instagram / rb_astronomy</span>
-          </a>
-        </li>
-      </ul>
+          <div class="contact__actions">
+            <a class="btn btn--primary" :href="`mailto:${EMAIL}`">
+              <Mail /> {{ t.contact.emailLabel }}
+            </a>
+            <a
+              class="btn btn--ghost contact__ghost"
+              href="https://github.com/rbastronomy"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Github /> GitHub
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 </template>
@@ -43,68 +39,74 @@ const EMAIL = "rfbdsistemas@hotmail.com";
 @use "../../assets/styles/mixins" as *;
 
 .contact {
-  padding-block: var(--section-pad);
+  padding-top: var(--section-pad);
+}
 
-  &__heading {
-    font-size: var(--fs-h1);
-    margin-top: 1.5rem;
-    max-width: 14ch;
+.contact__card {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  box-shadow: var(--shadow-card);
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.78));
   }
+}
 
-  &__body {
-    font-size: clamp(1.1rem, 2vw, 1.5rem);
-    color: var(--c-muted);
-    max-width: 44ch;
-    margin-top: 1.5rem;
-  }
+.contact__inner {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: clamp(3rem, 8vw, 6.5rem) clamp(1.5rem, 5vw, 5rem);
+}
 
-  &__email {
-    display: inline-flex;
-    align-items: center;
-    gap: 1rem;
-    margin-block: 2.5rem;
-    font-family: var(--f-display);
-    font-size: clamp(1.25rem, 4vw, 3rem);
-    letter-spacing: -0.03em;
-    color: var(--c-fg);
-    border-bottom: var(--border-w) solid var(--c-accent);
-    padding-bottom: 0.5rem;
-    transition: color 0.2s;
-    word-break: break-all;
+.contact__kicker {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--f-mono);
+  font-size: var(--fs-mono);
+  letter-spacing: 0.03em;
+  color: var(--c-accent-strong);
+}
 
-    svg {
-      width: clamp(24px, 3vw, 40px);
-      height: clamp(24px, 3vw, 40px);
-      flex-shrink: 0;
-    }
+.contact__heading {
+  margin-top: 1.1rem;
+  font-family: var(--f-display);
+  font-weight: 900;
+  font-size: var(--fs-h1);
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+  color: #141414;
+}
 
-    &:hover {
-      color: var(--c-accent);
-    }
-  }
+.contact__body {
+  margin: 1.1rem auto 0;
+  max-width: 48ch;
+  font-size: var(--fs-lead);
+  line-height: 1.55;
+  color: #333;
+}
 
-  &__social {
-    display: flex;
-    gap: 2.5rem;
-    margin-top: 2rem;
-    flex-wrap: wrap;
+.contact__actions {
+  margin-top: 2.1rem;
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
 
-    a {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.75rem;
-      color: var(--c-muted);
-      transition: color 0.2s;
+.contact__ghost {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(20, 20, 15, 0.25);
+  color: #141414;
 
-      svg {
-        width: 20px;
-        height: 20px;
-      }
-
-      &:hover {
-        color: var(--c-accent);
-      }
-    }
+  &:hover {
+    border-color: #141414;
   }
 }
 </style>
