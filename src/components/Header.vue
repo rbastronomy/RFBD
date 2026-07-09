@@ -37,9 +37,9 @@ onUnmounted(() => {
 <template>
   <header class="header" :class="{ 'is-scrolled': scrolled }">
     <div class="header__bar">
-      <button class="logo" type="button" aria-label="Renato Barria — inicio" @click="scrollTo(0)">
+      <button class="logo" type="button" aria-label="RFBD — inicio" @click="scrollTo(0)">
         <Logo :size="20" />
-        <span class="logo__word">Renato Barria<span class="accent">®</span></span>
+        <span class="logo__word">RFBD<span class="accent">®</span></span>
       </button>
 
       <nav class="nav">

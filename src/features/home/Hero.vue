@@ -109,14 +109,6 @@ onUnmounted(stop);
               <p class="shot__desc">{{ current.tagline[locale] }}</p>
             </div>
 
-            <!-- Manual, transparent-gradient navigation -->
-            <button class="shot__nav shot__nav--prev" type="button" aria-label="Anterior" @click="prev">
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-            <button class="shot__nav shot__nav--next" type="button" aria-label="Siguiente" @click="next">
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-
             <div class="shot__dots" role="tablist">
               <button
                 v-for="(s, i) in shots"
@@ -131,6 +123,14 @@ onUnmounted(stop);
             </div>
           </div>
         </div>
+
+        <!-- Manual navigation, sitting on the painting outside the mockup -->
+        <button class="shot__nav shot__nav--prev" type="button" aria-label="Anterior" @click="prev">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="shot__nav shot__nav--next" type="button" aria-label="Siguiente" @click="next">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
       </div>
 
       <div class="hero__trust">
@@ -350,33 +350,31 @@ onUnmounted(stop);
   color: rgba(255, 255, 255, 0.82);
 }
 
-/* transparent gradient nav arrows */
+/* nav arrows — sit in the painting's margin, outside the mockup screenshot,
+   so they read against a consistent backdrop instead of camouflaging with
+   whatever colors the current project preview happens to have. */
 .shot__nav {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 3;
+  z-index: 4;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 40px;
-  height: 52px;
-  color: #fff;
-  border-radius: 12px;
-  border: var(--hairline) solid rgba(255, 255, 255, 0.2);
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.22),
-    rgba(255, 255, 255, 0.06)
-  );
+  height: 40px;
+  color: var(--c-fg);
+  border-radius: 50%;
+  border: var(--hairline) solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(8px) saturate(1.3);
   -webkit-backdrop-filter: blur(8px) saturate(1.3);
-  box-shadow: 0 6px 18px -8px rgba(0, 0, 0, 0.45);
-  opacity: 0.55;
+  box-shadow: 0 6px 18px -6px rgba(0, 0, 0, 0.4);
+  opacity: 1;
   transition:
-    opacity 0.2s ease,
     transform 0.2s ease,
-    background-color 0.2s ease;
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
 
   svg {
     width: 20px;
@@ -384,18 +382,14 @@ onUnmounted(stop);
   }
 
   &:hover {
-    opacity: 1;
-    background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.34),
-      rgba(255, 255, 255, 0.12)
-    );
+    background: #fff;
+    box-shadow: 0 8px 22px -6px rgba(0, 0, 0, 0.5);
   }
   &--prev {
-    left: clamp(0.5rem, 1.2vw, 0.9rem);
+    left: clamp(0.2rem, 1.2vw, 0.7rem);
   }
   &--next {
-    right: clamp(0.5rem, 1.2vw, 0.9rem);
+    right: clamp(0.2rem, 1.2vw, 0.7rem);
   }
   &:hover.shot__nav--prev {
     transform: translateY(-50%) translateX(-2px);

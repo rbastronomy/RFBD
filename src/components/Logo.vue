@@ -30,7 +30,7 @@ const lines = [
     viewBox="0 0 96 120"
     fill="none"
     role="img"
-    aria-label="Renato Barria"
+    aria-label="RFBD"
   >
     <line
       v-for="(l, i) in lines"

@@ -17,7 +17,7 @@ const go = (id: string) => scrollTo(`#${id}`, -8);
     <div class="container">
       <div class="footer__cols">
         <div class="footer__brand">
-          <p class="footer__name">Renato Barria<span class="accent">®</span></p>
+          <p class="footer__name">RFBD<span class="accent">®</span></p>
           <p class="footer__tag">{{ t.hero.intro }}</p>
           <ul class="footer__social">
             <li><a :href="`mailto:${EMAIL}`" aria-label="Email"><Mail /></a></li>
@@ -47,12 +47,10 @@ const go = (id: string) => scrollTo(`#${id}`, -8);
       </div>
 
       <div class="footer__bottom">
-        <p>© {{ year }} Renato Barria — {{ t.footer.rights }}</p>
+        <p>© {{ year }} RFBD — {{ t.footer.rights }}</p>
         <p>{{ t.footer.builtWith }}</p>
       </div>
     </div>
-
-    <p class="footer__wordmark" aria-hidden="true">Renato Barria<span>.</span></p>
   </footer>
 </template>
 
@@ -160,17 +158,4 @@ const go = (id: string) => scrollTo(`#${id}`, -8);
   color: var(--c-muted);
 }
 
-.footer__wordmark {
-  font-family: var(--f-display);
-  font-weight: 900;
-  font-size: clamp(3rem, 16vw, 15rem);
-  line-height: 0.9;
-  letter-spacing: -0.04em;
-  text-align: center;
-  color: var(--c-fg);
-  white-space: nowrap;
-  margin-top: 1rem;
-
-  span { color: var(--c-accent); }
-}
 </style>
