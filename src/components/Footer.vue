@@ -3,11 +3,13 @@ import { useTranslations } from "@/i18n/useTranslations";
 import { scrollTo } from "@/composables/useScroll";
 import Github from "@/components/icons/Github.vue";
 import Instagram from "@/components/icons/Instagram.vue";
+import Discord from "@/components/icons/Discord.vue";
 import Mail from "@/components/icons/Mail.vue";
 
 const { t } = useTranslations();
 const year = new Date().getFullYear();
 const EMAIL = "rfbdsistemas@hotmail.com";
+const DISCORD_URL = "https://discord.gg/5MsD5syMPm";
 
 const go = (id: string) => scrollTo(`#${id}`, -8);
 </script>
@@ -27,6 +29,9 @@ const go = (id: string) => scrollTo(`#${id}`, -8);
             <li>
               <a href="https://instagram.com/rb_astronomy" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><Instagram /></a>
             </li>
+            <li>
+              <a :href="DISCORD_URL" target="_blank" rel="noopener noreferrer" aria-label="Discord"><Discord /></a>
+            </li>
           </ul>
         </div>
 
@@ -35,6 +40,7 @@ const go = (id: string) => scrollTo(`#${id}`, -8);
           <button type="button" @click="go('services')">{{ t.nav.services }}</button>
           <button type="button" @click="go('process')">{{ t.nav.process }}</button>
           <button type="button" @click="go('work')">{{ t.nav.work }}</button>
+          <button type="button" @click="go('community')">{{ t.nav.community }}</button>
           <button type="button" @click="go('contact')">{{ t.nav.contact }}</button>
         </nav>
 

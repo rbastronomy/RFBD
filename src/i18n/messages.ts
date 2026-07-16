@@ -22,6 +22,11 @@ export interface FaqItem {
   a: string;
 }
 
+export interface CommunitySpec {
+  label: string;
+  value: string;
+}
+
 export interface BuildItem {
   label: string;
   title: string;
@@ -30,7 +35,7 @@ export interface BuildItem {
 }
 
 export interface Messages {
-  nav: { services: string; process: string; work: string; contact: string };
+  nav: { services: string; process: string; work: string; community: string; contact: string };
   hero: {
     badge: string;
     title: string;
@@ -80,6 +85,21 @@ export interface Messages {
   stats: {
     label: string;
     items: StatItem[];
+  };
+  community: {
+    label: string;
+    heading: string;
+    lead: string;
+    addressLabel: string;
+    specs: CommunitySpec[];
+    copy: string;
+    copied: string;
+    rulesTitle: string;
+    rules: string[];
+    joinTitle: string;
+    joinBody: string;
+    discordCta: string;
+    note: string;
   };
   faq: {
     label: string;
@@ -158,7 +178,13 @@ export interface Messages {
 
 export const messages: Record<Locale, Messages> = {
   es: {
-    nav: { services: "Servicios", process: "Proceso", work: "Trabajos", contact: "Contacto" },
+    nav: {
+      services: "Servicios",
+      process: "Proceso",
+      work: "Trabajos",
+      community: "Comunidad",
+      contact: "Contacto",
+    },
     hero: {
       badge: "Disponible para nuevos proyectos",
       title: "Sistemas a medida,",
@@ -239,6 +265,34 @@ export const messages: Record<Locale, Messages> = {
         { value: "15+", label: "Tecnologías en el stack" },
         { value: "100%", label: "Hecho a medida" },
       ],
+    },
+    community: {
+      label: "RFBD Community",
+      heading: "Un servidor de Minecraft para jugar con amigos",
+      lead: "RFBD Community es un servidor privado de Minecraft para jugar con amigos: entra desde el PC con Java Edition, o desde el celular y la consola con Bedrock — todos al mismo mundo. Está alojado en Aternos, así que no corre las 24 horas: alguien lo enciende cuando hay ganas de jugar y se apaga solo cuando queda vacío.",
+      addressLabel: "Dirección",
+      specs: [
+        { label: "Bedrock", value: "rfbd.aternos.me:19132" },
+        { label: "Edición", value: "Java + Bedrock" },
+        { label: "Versión", value: "Paper 26.2" },
+        { label: "Modalidad", value: "Survival" },
+        { label: "Acceso", value: "Registro en el chat" },
+        { label: "Cupos", value: "20" },
+      ],
+      copy: "Copiar dirección",
+      copied: "Copiado",
+      rulesTitle: "Reglas de la casa",
+      rules: [
+        "Sin griefing ni robo a otros jugadores.",
+        "Respeto en el chat y en las llamadas.",
+        "Nada de clientes modificados ni x-ray.",
+        "Construye lejos del spawn y de lo ajeno.",
+      ],
+      joinTitle: "¿Cómo entro?",
+      joinBody:
+        "Copia la dirección y conéctate. La primera vez, regístrate en el chat con /register y una contraseña; después entras con /login. Usa una contraseña desechable — no la de tu correo. Desde celular o consola, la misma dirección con el puerto 19132. Si aparece apagado, pide en el Discord que lo enciendan.",
+      discordCta: "Entrar al Discord",
+      note: "Servidor entre amigos, alojado gratis en Aternos. Sin costo, sin tienda, sin ventajas por pagar.",
     },
     faq: {
       label: "Preguntas frecuentes",
@@ -385,7 +439,13 @@ export const messages: Record<Locale, Messages> = {
     },
   },
   en: {
-    nav: { services: "Services", process: "Process", work: "Work", contact: "Contact" },
+    nav: {
+      services: "Services",
+      process: "Process",
+      work: "Work",
+      community: "Community",
+      contact: "Contact",
+    },
     hero: {
       badge: "Available for new projects",
       title: "Tailor-made systems,",
@@ -466,6 +526,34 @@ export const messages: Record<Locale, Messages> = {
         { value: "15+", label: "Technologies in the stack" },
         { value: "100%", label: "Made to measure" },
       ],
+    },
+    community: {
+      label: "RFBD Community",
+      heading: "A Minecraft server to play with friends",
+      lead: "RFBD Community is a private Minecraft server for playing with friends: join from your PC on Java Edition, or from your phone and console on Bedrock — everyone in the same world. It runs on Aternos, so it isn't up 24/7: someone switches it on when there's a game going, and it shuts down on its own once it empties out.",
+      addressLabel: "Address",
+      specs: [
+        { label: "Bedrock", value: "rfbd.aternos.me:19132" },
+        { label: "Edition", value: "Java + Bedrock" },
+        { label: "Version", value: "Paper 26.2" },
+        { label: "Mode", value: "Survival" },
+        { label: "Access", value: "In-game registration" },
+        { label: "Slots", value: "20" },
+      ],
+      copy: "Copy address",
+      copied: "Copied",
+      rulesTitle: "House rules",
+      rules: [
+        "No griefing or stealing from other players.",
+        "Respect in chat and on calls.",
+        "No modified clients or x-ray.",
+        "Build away from spawn and from other people's work.",
+      ],
+      joinTitle: "How do I join?",
+      joinBody:
+        "Copy the address and connect. The first time, register in chat with /register and a password; after that you get in with /login. Use a throwaway password — not your email one. On phone or console, same address with port 19132. If it shows as offline, ask on Discord for someone to switch it on.",
+      discordCta: "Join the Discord",
+      note: "A server among friends, hosted free on Aternos. No cost, no shop, no pay-to-win.",
     },
     faq: {
       label: "Frequently asked",

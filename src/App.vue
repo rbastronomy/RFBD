@@ -9,6 +9,7 @@ import Showcase from "@/features/projects/Showcase.vue";
 import TechGravity from "@/features/home/TechGravity.vue";
 import Globe from "@/features/home/Globe.vue";
 import Stats from "@/features/home/Stats.vue";
+import Community from "@/features/community/Community.vue";
 import Contact from "@/features/home/Contact.vue";
 import Newsletter from "@/features/home/Newsletter.vue";
 import Faq from "@/features/home/Faq.vue";
@@ -28,6 +29,7 @@ useScroll();
     <TechGravity />
     <Globe />
     <Stats />
+    <Community />
     <Faq />
     <Contact />
     <Newsletter />

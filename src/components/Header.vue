@@ -46,6 +46,7 @@ onUnmounted(() => {
         <button type="button" @click="go('services')">{{ t.nav.services }}</button>
         <button type="button" @click="go('process')">{{ t.nav.process }}</button>
         <button type="button" @click="go('work')">{{ t.nav.work }}</button>
+        <button type="button" @click="go('community')">{{ t.nav.community }}</button>
       </nav>
 
       <div class="header__actions">
@@ -79,6 +80,7 @@ onUnmounted(() => {
           <button type="button" @click="goMobile('services')">{{ t.nav.services }}</button>
           <button type="button" @click="goMobile('process')">{{ t.nav.process }}</button>
           <button type="button" @click="goMobile('work')">{{ t.nav.work }}</button>
+          <button type="button" @click="goMobile('community')">{{ t.nav.community }}</button>
         </nav>
         <div class="mobile-menu__foot">
           <div class="toggles toggles--menu">
