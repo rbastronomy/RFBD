@@ -39,3 +39,6 @@ logo navegador.png
 *.njsproj
 *.sln
 *.sw?
+
+# graphify: grafo de conocimiento generado localmente, no se versiona
+graphify-out/
